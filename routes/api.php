@@ -16,11 +16,15 @@ Route::post('auth/login', 'AuthController@login');
 
 Route::group([
 	'middleware' => 'jwt',
-	'prefix' => 'auth'
 ], function () {
 
-	Route::post('logout', 'AuthController@logout');
-	Route::post('refresh', 'AuthController@refresh');
-	Route::post('me', 'AuthController@me');
+	Route::group(['prefix' => 'auth'], function() {
+		Route::post('logout', 'AuthController@logout');
+		Route::post('refresh', 'AuthController@refresh');
+		Route::post('me', 'AuthController@me');
+	});
 
+	Route::group(['prefix' => 'user'], function() {
+		Route::get('/show-all', 'UserController@showAll');
+	});
 });

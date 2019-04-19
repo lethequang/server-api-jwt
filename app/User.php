@@ -38,7 +38,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'email', 'password',
+        'email', 'password', 'phone', 'full_name'
     ];
 
     /**
@@ -58,4 +58,36 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function showAllUser($filters) {
+		$sql = $this->select('*');
+
+		if (isset($filters['email'])) {
+			$email = $filters['email'];
+			$sql->where('users.email', 'LIKE', '%'. $email .'%');
+		}
+
+		if (isset($filters['phone'])) {
+			$email = $filters['phone'];
+			$sql->where('users.phone', 'LIKE', '%'. $email .'%');
+		}
+
+		if (isset($filters['full_name'])) {
+			$email = $filters['full_name'];
+			$sql->where('users.full_name', 'LIKE', '%'. $email .'%');
+		}
+
+		$total = $sql->count();
+
+		$data = $sql->skip($filters['offset'])
+			->take($filters['limit'])
+			->orderBy($filters['sort'], $filters['order'])
+			->get()
+			->toArray();
+
+		return [
+			'total' => $total,
+			'rows' => $data
+		];
+	}
 }

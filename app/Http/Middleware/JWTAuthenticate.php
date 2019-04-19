@@ -76,15 +76,14 @@ class JWTAuthenticate
     }
 
 	/**
-	 * @return null|string
+	 * Check token provided or not
 	 */
     public function getToken() {
     	return $this->jwtAuth->parser()->parseToken();
 	}
 
 	/**
-	 * @return false|\Tymon\JWTAuth\Contracts\JWTSubject
-	 * @throws JWTException
+	 * Check user auth from token
 	 */
 	public function getUser() {
     	return $this->jwtAuth->parseToken()->authenticate();
