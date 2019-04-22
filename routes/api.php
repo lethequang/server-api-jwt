@@ -26,5 +26,7 @@ Route::group([
 
 	Route::group(['prefix' => 'user'], function() {
 		Route::get('/show-all', 'UserController@showAll');
+		Route::delete('/remove/{id}', 'UserController@remove');
+		Route::put('/update/{id}', 'UserController@update');
 	});
 });

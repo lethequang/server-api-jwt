@@ -11,7 +11,7 @@ namespace App\Helpers;
 class ResponseAPI
 {
 
-	public static function success($code = 200, $msg = '', $data = false) {
+	public static function success($code = 200, $msg = '', $data = null) {
 		return response()->json([
 			'code' => $code,
 			'msg' => $msg,
@@ -19,7 +19,7 @@ class ResponseAPI
 		], $code);
 	}
 
-	public static function error($code = 400, $msg = '', $errors = false) {
+	public static function error($code = 400, $msg = '', $errors = null) {
 		return response()->json([
 			'code' => $code,
 			'msg' => $msg,

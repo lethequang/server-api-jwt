@@ -90,4 +90,12 @@ class User extends Authenticatable implements JWTSubject
 			'rows' => $data
 		];
 	}
+
+	public function removeUser($user) {
+    	return $user->delete();
+	}
+
+	public function edit($user, $data) {
+		return $user->update($data);
+	}
 }
