@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class User1 extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -31,6 +31,8 @@ class User extends Authenticatable implements JWTSubject
 	{
 		return [];
 	}
+
+	protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -97,5 +99,10 @@ class User extends Authenticatable implements JWTSubject
 
 	public function edit($user, $data) {
 		return $user->update($data);
+	}
+
+	public function create($data) {
+    	$object = new User1();
+    	return $object->create($data);
 	}
 }

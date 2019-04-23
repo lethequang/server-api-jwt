@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
+use App\Http\Model\User;
 use App\Helpers\ResponseAPI;
 use App\Http\Requests\User as RequestUser;
 
@@ -40,14 +40,14 @@ class UserController extends Controller
     	try {
     		$user = $this->_model->find($id);
     		if (!$user) {
-				return ResponseAPI::error(404, 'User not found');
+				return ResponseAPI::error(404, trans('messages.not_found_with_id', ['name' => 'user', 'id' => $id]));
 			}
 			if (! $this->_model->removeUser($user)) {
-				return ResponseAPI::error(400, 'Remove fail');
+				return ResponseAPI::error(400, trans('messages.fail'));
 			}
-			return ResponseAPI::success(200, 'success', $user);
+			return ResponseAPI::success(200, trans('messages.success'), $user);
 		} catch (\Exception $e) {
-    		return ResponseAPI::error(500, $e->getMessage());
+    		return ResponseAPI::error(500, trans('messages.server_error', ['msg' => $e->getMessage()]));
 		}
 	}
 
@@ -56,18 +56,33 @@ class UserController extends Controller
 		try {
 			$user = $this->_model->find($id);
 			if (!$user) {
-				return ResponseAPI::error(404, 'User not found');
+				return ResponseAPI::error(404, trans('messages.not_found_with_id', ['name' => 'user', 'id' => $id]));
 			}
-			$validation = $request->validated();
-			if ($validation->fails()) {
-				return ResponseAPI::error(400, 'Validation error', $validation->errors());
+			$errors = $request->validated();
+			if (!empty($errors)) {
+				return ResponseAPI::error(400, trans('messages.fail'), $errors);
 			}
 			if (! $this->_model->edit($user, $request->all())) {
-				return ResponseAPI::error(400, 'Update fail');
+				return ResponseAPI::error(400, trans('messages.fail'));
 			}
-			return ResponseAPI::success(200, 'success', $user);
+			return ResponseAPI::success(200, trans('messages.success'), $user);
 		} catch (\Exception $e) {
-			return ResponseAPI::error(500, $e->getMessage());
+			return ResponseAPI::error(500, trans('messages.server_error', ['msg' => $e->getMessage()]));
+		}
+	}
+
+	public function create(RequestUser $request) {
+    	try {
+    		$errors = $request->validated();
+    		if (!empty($errors)) {
+				return ResponseAPI::error(400, 'Validation error', $errors);
+			}
+			if (! $user = $this->_model->add($request->all())) {
+				return ResponseAPI::error(400, 'Create fail');
+			}
+			return ResponseAPI::success(200, 'Success', $user);
+		} catch (\Exception $e) {
+    		return ResponseAPI::error(500, $e->getMessage());
 		}
 	}
 }

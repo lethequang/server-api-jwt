@@ -36,7 +36,6 @@ class JWTAuthenticate
      */
     public function handle($request, Closure $next)
     {
-
     	if (! $this->getToken()) {
     		return response()->json([
     			'code' => 401,

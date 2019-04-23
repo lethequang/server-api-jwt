@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Dotenv\Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class User extends FormRequest
@@ -14,7 +14,7 @@ class User extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,15 +25,25 @@ class User extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|unique:email',
-			'full_name' => 'required|min:6',
-			'phone' => 'required|max:9',
-			'password' => 'required|min:6'
+            'email' => 'required|unique:users,email,' . $this->id,
+			'full_name' => 'required|min:3',
+			'phone' => 'required|min:9',
+			'password' => 'required|min:6',
         ];
     }
 
-    public function validated($data) {
-		$validator =  Validator::make($data, $this->rules());
-		return $validator;
+    public function validateResolved()
+	{
+		//
+	}
+
+
+	public function validated() {
+		$validator =  Validator::make($this->validationData(), $this->rules(), $this->messages());
+		$errors = array();
+		if ($validator->fails()) {
+			$errors = $validator->errors();
+		}
+		return $errors;
     }
 }
