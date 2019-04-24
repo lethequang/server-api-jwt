@@ -4,6 +4,7 @@ namespace App\Http\Model;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -57,7 +58,7 @@ class User extends Authenticatable implements JWTSubject
 	 * @var array
 	 */
 	protected $hidden = [
-		'password', 'remember_token',
+		'remember_token',
 	];
 
 	/**
@@ -101,15 +102,26 @@ class User extends Authenticatable implements JWTSubject
 		];
 	}
 
-	public function removeUser($user) {
+	public function remove($user) {
 		return $user->delete();
 	}
 
 	public function edit($user, $data) {
+		$this->formatInputs($user, $data);
 		return $user->update($data);
 	}
 
+	public function formatInputs($user, &$data) {
+		if ($data['password'] == $user->password) {
+			unset($data['password']);
+		} else {
+			$data['password'] = Hash::make($data['password']);
+		}
+		return $data;
+	}
+
 	public function add($data) {
+		$this->formatInputs($this, $data);
 		return $this->create($data);
 	}
 }

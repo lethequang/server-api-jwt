@@ -32,6 +32,9 @@ class User extends FormRequest
         ];
     }
 
+    /*
+     * Override form request laravel function
+     */
     public function validateResolved()
 	{
 		//

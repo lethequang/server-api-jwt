@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +11,8 @@ use Illuminate\Support\Facades\App;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+// Set locale Vietnam
 App::setLocale('vi');
 
 Route::post('auth/login', 'AuthController@login');
@@ -28,6 +29,7 @@ Route::group([
 
 	Route::group(['prefix' => 'user'], function() {
 		Route::get('/show-all', 'UserController@showAll');
+		Route::get('/detail/{id}', 'UserController@detail');
 		Route::delete('/remove/{id}', 'UserController@remove');
 		Route::put('/update/{id}', 'UserController@update');
 		Route::post('/create', 'UserController@create');

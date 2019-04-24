@@ -17,6 +17,9 @@ class UserController extends Controller
 
 	}
 
+	/*
+	 * Show list user
+	 */
 	public function showAll(Request $request) {
 
 		$filters = [
@@ -36,13 +39,27 @@ class UserController extends Controller
 		return ResponseAPI::success(200, 'Success', $data);
 	}
 
+	/*
+	 * Show detail a user
+	 */
+	public function detail($id) {
+		$user = $this->_model->find($id);
+		if (!$user) {
+			return ResponseAPI::error(404, trans('messages.not_found'));
+		}
+		return ResponseAPI::success(200, trans('messages.success'), $user);
+    }
+
+    /*
+     * Delete user
+     */
 	public function remove($id) {
     	try {
     		$user = $this->_model->find($id);
     		if (!$user) {
-				return ResponseAPI::error(404, trans('messages.not_found_with_id', ['name' => 'user', 'id' => $id]));
+				return ResponseAPI::error(404, trans('messages.not_found'));
 			}
-			if (! $this->_model->removeUser($user)) {
+			if (! $this->_model->remove($user)) {
 				return ResponseAPI::error(400, trans('messages.fail'));
 			}
 			return ResponseAPI::success(200, trans('messages.success'), $user);
@@ -51,16 +68,19 @@ class UserController extends Controller
 		}
 	}
 
+	/*
+	 * Edit user
+	 */
 	public function update(RequestUser $request, $id)
 	{
 		try {
 			$user = $this->_model->find($id);
 			if (!$user) {
-				return ResponseAPI::error(404, trans('messages.not_found_with_id', ['name' => 'user', 'id' => $id]));
+				return ResponseAPI::error(404, trans('messages.not_found'));
 			}
 			$errors = $request->validated();
 			if (!empty($errors)) {
-				return ResponseAPI::error(400, trans('messages.fail'), $errors);
+				return ResponseAPI::error(422, trans('messages.unprocessable_entity'), $errors);
 			}
 			if (! $this->_model->edit($user, $request->all())) {
 				return ResponseAPI::error(400, trans('messages.fail'));
@@ -71,18 +91,21 @@ class UserController extends Controller
 		}
 	}
 
+	/*
+	 * Create user
+	 */
 	public function create(RequestUser $request) {
     	try {
     		$errors = $request->validated();
     		if (!empty($errors)) {
-				return ResponseAPI::error(400, 'Validation error', $errors);
+				return ResponseAPI::error(422, trans('messages.unprocessable_entity'), $errors);
 			}
 			if (! $user = $this->_model->add($request->all())) {
-				return ResponseAPI::error(400, 'Create fail');
+				return ResponseAPI::error(400, trans('messages.fail'));
 			}
-			return ResponseAPI::success(200, 'Success', $user);
+			return ResponseAPI::success(200, trans('messages.success'), $user);
 		} catch (\Exception $e) {
-    		return ResponseAPI::error(500, $e->getMessage());
+			return ResponseAPI::error(500, trans('messages.server_error', ['msg' => $e->getMessage()]));
 		}
 	}
 }

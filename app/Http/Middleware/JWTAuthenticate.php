@@ -82,7 +82,7 @@ class JWTAuthenticate
 	}
 
 	/**
-	 * Check user auth from token
+	 * Check user authentication from token
 	 */
 	public function getUser() {
     	return $this->jwtAuth->parseToken()->authenticate();

@@ -31,13 +31,13 @@ class AuthController extends Controller
 			'password' => 'required'
 		]);
 		if ($validation->fails()) {
-			return ResponseAPI::error(400, 'Validation error', $validation->errors());
+			return ResponseAPI::error(422, trans('messages.unprocessable_entity'), $validation->errors());
 		}
 
 		$credentials = request(['email', 'password']);
 
 		if (! $token = auth('api')->attempt($credentials)) {
-			return ResponseAPI::error(401, 'Unauthorized');
+			return ResponseAPI::error(401, trans('messages.unauthorized'));
 		}
 
 		return $this->respondWithToken($token);
@@ -50,7 +50,7 @@ class AuthController extends Controller
 	 */
 	public function me()
 	{
-		return ResponseAPI::success(200, 'Success', auth()->user());
+		return ResponseAPI::success(200, trans('messages.success'), auth()->user());
 	}
 
 	/**
@@ -62,7 +62,7 @@ class AuthController extends Controller
 	{
 		auth('api')->logout();
 
-		return ResponseAPI::success(200, 'Successfully logged out');
+		return ResponseAPI::success(200, trans('messages.success'));
 	}
 
 	/**
@@ -90,6 +90,6 @@ class AuthController extends Controller
 			'expires_in' => auth('api')->factory()->getTTL() * 60
 		];
 
-		return ResponseAPI::success(200, 'Success', $data);
+		return ResponseAPI::success(200, trans('messages.success'), $data);
 	}
 }
