@@ -6,9 +6,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, Auditable
 {
+	use \OwenIt\Auditing\Auditable;
+
 	use Notifiable;
 
 	// Rest omitted for brevity
@@ -40,8 +43,8 @@ class User extends Authenticatable implements JWTSubject
 	 */
 	protected $table = 'users';
 
-	const CREATED_AT = 'created_at';
-	const UPDATED_AT = 'updated_at';
+	public const CREATED_AT = 'created_at';
+	public const UPDATED_AT = 'updated_at';
 
 	/**
 	 * The attributes that are mass assignable.
@@ -75,17 +78,17 @@ class User extends Authenticatable implements JWTSubject
 
 		if (isset($filters['email'])) {
 			$email = $filters['email'];
-			$sql->where('users.email', 'LIKE', '%'. $email .'%');
+			$sql->where("{$this->table}.email", 'LIKE', '%'. $email .'%');
 		}
 
 		if (isset($filters['phone'])) {
 			$email = $filters['phone'];
-			$sql->where('users.phone', 'LIKE', '%'. $email .'%');
+			$sql->where("{$this->table}.phone", 'LIKE', '%'. $email .'%');
 		}
 
 		if (isset($filters['full_name'])) {
 			$email = $filters['full_name'];
-			$sql->where('users.full_name', 'LIKE', '%'. $email .'%');
+			$sql->where("{$this->table}.full_name", 'LIKE', '%'. $email .'%');
 		}
 
 		$total = $sql->count();

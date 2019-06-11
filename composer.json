@@ -12,6 +12,8 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
+        "mpociot/laravel-apidoc-generator": "^3.5",
+        "owen-it/laravel-auditing": "^9.2",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
