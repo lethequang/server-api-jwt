@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Model\Invoice;
 use Illuminate\Http\Request;
 use App\Http\Model\User;
 use App\Helpers\ResponseAPI;
 use App\Http\Requests\User as RequestUser;
 use Illuminate\Support\Facades\DB;
 
-class UserController extends Controller
+class InvoiceController extends Controller
 {
 	private $_model;
 
     public function __construct()
 	{
-		$this->_model = new User();
+		$this->_model = new Invoice();
 
 	}
 
@@ -44,11 +45,11 @@ class UserController extends Controller
 	 * Show detail a user
 	 */
 	public function detail($id) {
-		$user = $this->_model->find($id);
-		if (!$user) {
+		$invoice = $this->_model->find($id);
+		if (!$invoice) {
 			return ResponseAPI::error(404, trans('messages.not_found'));
 		}
-		return ResponseAPI::success(200, trans('messages.success'), $user);
+		return ResponseAPI::success(200, trans('messages.success'), $invoice);
     }
 
     /*
@@ -56,14 +57,14 @@ class UserController extends Controller
      */
 	public function remove($id) {
     	try {
-    		$user = $this->_model->find($id);
-    		if (!$user) {
+    		$invoice = $this->_model->find($id);
+    		if (!$invoice) {
 				return ResponseAPI::error(404, trans('messages.not_found'));
 			}
-			if (! $this->_model->remove($user)) {
+			if (! $invoice->delete()) {
 				return ResponseAPI::error(400, trans('messages.fail'));
 			}
-			return ResponseAPI::success(200, trans('messages.success'), $user);
+			return ResponseAPI::success(200, trans('messages.success'), $invoice);
 		} catch (\Exception $e) {
     		return ResponseAPI::error(500, trans('messages.server_error', ['msg' => $e->getMessage()]));
 		}
@@ -75,18 +76,18 @@ class UserController extends Controller
 	public function update(RequestUser $request, $id)
 	{
 		try {
-			$user = $this->_model->find($id);
-			if (!$user) {
+			$invoice = $this->_model->find($id);
+			if (!$invoice) {
 				return ResponseAPI::error(404, trans('messages.not_found'));
 			}
 			$errors = $request->validated();
 			if (!empty($errors)) {
 				return ResponseAPI::error(422, trans('messages.unprocessable_entity'), $errors);
 			}
-			if (! $this->_model->edit($user, $request->all())) {
+			if (! $this->_model->edit($invoice, $request->all())) {
 				return ResponseAPI::error(400, trans('messages.fail'));
 			}
-			return ResponseAPI::success(200, trans('messages.success'), $user);
+			return ResponseAPI::success(200, trans('messages.success'), $invoice);
 		} catch (\Exception $e) {
 			return ResponseAPI::error(500, trans('messages.server_error', ['msg' => $e->getMessage()]));
 		}
@@ -95,16 +96,12 @@ class UserController extends Controller
 	/*
 	 * Create user
 	 */
-	public function create(RequestUser $request) {
+	public function create(Request $request) {
     	try {
-    		$errors = $request->validated();
-    		if (!empty($errors)) {
-				return ResponseAPI::error(422, trans('messages.unprocessable_entity'), $errors);
-			}
-			if (! $user = $this->_model->add($request->all())) {
+			if (! $invoice = $this->_model->create($request->all())) {
 				return ResponseAPI::error(400, trans('messages.fail'));
 			}
-			return ResponseAPI::success(200, trans('messages.success'), $user);
+			return ResponseAPI::success(200, trans('messages.success'), $invoice);
 		} catch (\Exception $e) {
 			return ResponseAPI::error(500, trans('messages.server_error', ['msg' => $e->getMessage()]));
 		}

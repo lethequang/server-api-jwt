@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AuditRewrite;
+use App\Console\Commands\TodayUsers;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        TodayUsers::class,
+		AuditRewrite::class
     ];
 
     /**
@@ -26,6 +29,10 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+		$schedule->command('today-user:check')
+			->everyMinute();
+		$schedule->command('audit:rewrite')
+			->daily();
     }
 
     /**

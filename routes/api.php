@@ -34,4 +34,9 @@ Route::group([
 		Route::put('/update/{id}', 'UserController@update');
 		Route::post('/create', 'UserController@create');
 	});
+
+	Route::group(['prefix' => 'invoice'], function() {
+		Route::delete('/remove/{id}', 'InvoiceController@remove');
+		Route::post('/create', 'InvoiceController@create');
+	});
 });

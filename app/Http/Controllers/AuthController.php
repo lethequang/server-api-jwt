@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\Helpers\ResponseAPI;
+use OwenIt\Auditing\Facades\Auditor;
 
 class AuthController extends Controller
 {
