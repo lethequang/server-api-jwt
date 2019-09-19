@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
 		$schedule->command('today-user:check')
 			->everyMinute();
 		$schedule->command('audit:rewrite')
-			->daily();
+			->everyMinute();
     }
 
     /**

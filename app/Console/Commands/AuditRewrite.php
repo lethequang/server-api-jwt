@@ -60,6 +60,7 @@ class AuditRewrite extends Command
 	}
 
 	public function detectModel($path) {
+    	//dd(explode('\\', $path)[1]);
 		return basename($path);
 	}
 

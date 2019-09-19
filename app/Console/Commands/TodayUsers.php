@@ -44,7 +44,7 @@ class TodayUsers extends Command
 		if (!($user->first())) {
 			echo "Not found user with id $time";
 		} else {
-			$user->update(['email' => 'edit_in_' . date('i') . '@gmail.com']);
+			$user->update(['email' => 'edit_in_' . date('h-i') . '@gmail.com']);
 			echo " User $time has been updated";
 		}
     }
